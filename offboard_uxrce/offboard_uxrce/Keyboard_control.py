@@ -101,7 +101,7 @@ def main():
     )
 
 
-    pub = node.create_publisher(geometry_msgs.msg.Twist, '/offboard_velocity_cmd', qos_profile)
+    pub = node.create_publisher(geometry_msgs.msg.Twist, '/offboard_position_cmd', qos_profile)
 
     arm_toggle = False
     arm_pub = node.create_publisher(std_msgs.msg.Bool, '/arm_message', qos_profile)

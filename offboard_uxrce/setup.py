@@ -26,8 +26,8 @@ setup(
         'console_scripts': [
             'offboard_control = offboard_uxrce.offboard_control:main',
             'visualizer = offboard_uxrce.visualizer:main',
-            'velocity_control = offboard_uxrce.velocity_control:main',
-            'control = offboard_uxrce.control:main',
+            'Offboard_control = offboard_uxrce.Offboard_control:main',
+            'Keyboard_control = offboard_uxrce.Keyboard_control:main',
             'processes = offboard_uxrce.processes:main'
         ],
     },

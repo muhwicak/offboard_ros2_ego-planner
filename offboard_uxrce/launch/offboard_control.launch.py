@@ -44,16 +44,16 @@ def generate_launch_description():
         Node(
             package='offboard_uxrce',
             namespace='offboard_uxrce',
-            executable='control',
-            name='control',
+            executable='Keyboard_control',
+            name='Keyboard_control',
             prefix='gnome-terminal --',  # Optional: open in new terminal
             output='screen'
         ),
         Node(
             package='offboard_uxrce',
             namespace='offboard_uxrce',
-            executable='velocity_control',
-            name='velocity_control',
+            executable='Offboard_control',
+            name='Offboard_control',
             output='screen'
         ),
         Node(
