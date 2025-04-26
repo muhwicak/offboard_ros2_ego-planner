@@ -128,7 +128,7 @@ colcon build
 As mentioned in Jaeyoung Lim's [example](https://github.com/Jaeyoung-Lim/px4-offboard/blob/master/doc/ROS2_PX4_Offboard_Tutorial.md) you will get some warnings about setup.py but as long as there are no errors, you should be good to go.
 
 
-After this runs, we should never need to build px4_msgs again. However, we will need to build px4_offboard every time we make changes to the code. To do this, and save time, we can run
+After this runs, we should never need to build px4_msgs again. However, we will need to build offboard_uxrce every time we make changes to the code. To do this, and save time, we can run
 ```
 colcon build --packages-select offboard_uxrce
 ```
