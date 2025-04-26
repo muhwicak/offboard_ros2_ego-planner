@@ -1,24 +1,22 @@
 
-# ROS2_PX4_Offboard_Example
+# ROS2_PX4_Offboard_For_Ego-Planner
 
 ## Overview
-This tutorial explains at a basic level how to use ROS2 and PX4 in order to control a simulated UAV's velocity with keyboard controls. The goal is to create a simple example that a complete beginner can follow and understand, even with no ROS2 or PX4 experience.
+This tutorial explains at a basic level how to use ROS2 and PX4 in order to control a simulated UAV's position with keyboard controls for ROS2 Ego-Planner. The goal is to create a simple example that a complete beginner can follow and understand, even with no ROS2 or PX4 experience.
 
 This repo is a derivative of Jaeyoung Lim's Offboard example
 https://github.com/Jaeyoung-Lim/px4-offboard
 
 I've taken his example and added some functionality. 
 
-## YouTube Tutorial
-We published a walkthrough tutorial on YouTube to demonstrate the example and to help beginners set up their enviornment. The video is helpful, but be sure to always defer to this Readme file for instructions. Some changes have been made since the video was posted, meaning that though it is helpful, it is not 100% accurate.
-
-You can watch the video [here](https://www.youtube.com/watch?v=8gKIP0OqHdQ).
 
 ### Prerequisites
 * ROS2 Humble
 * PX4 Autopilot
 * Micro XRCE-DDS Agent
+* ROS2 Ego-Planner
 * px4_msgs
+* quadrotor_msgs
 * Ubuntu 22.04
 * Python 3.10
 
@@ -83,11 +81,11 @@ For more information on creating workspaces, see [here](https://docs.ros.org/en/
 Run this code to create a workspace in your home directory
 
 ```
-mkdir -p ~/ros2_px4_offboard_example_ws/src
-cd ~/ros2_px4_offboard_example_ws/src
+mkdir -p ~/offboard_ws/src
+cd ~/offboard_ws/src
 ```
 
-*ros2_px4_offboard_example_ws* is just a name I chose for the workspace. You can name it whatever you want. But after we run *colcon build* you might have issues changing your workspace name so choose wisely.
+*offboard_ws* is just a name I chose for the workspace. You can name it whatever you want. But after we run *colcon build* you might have issues changing your workspace name so choose wisely.
 
 We are now in the src directory of our workspace. This is where ROS2 packages go, and is where we will clone in our two repos.
 
@@ -103,7 +101,7 @@ git clone https://github.com/PX4/px4_msgs.git -b release/1.15
 Once again be sure you are still in the src directory of your workspace. Run this code to clone in our example package
 
 ```
-git clone https://github.com/ARK-Electronics/ROS2_PX4_Offboard_Example.git
+git clone git clone https://github.com/muhwicak/offboard_ros2_ego-planner.git
 ```
 
 Run this code to clone the repo
@@ -111,7 +109,7 @@ Run this code to clone the repo
 
 
 ### Building the Workspace
-The two packages in this workspace are px4_msgs and px4_offboard. px4_offboard is a ROS2 package that contains the code for the offboard control node that we will implement. It lives inside the ROS2_PX4_Offboard_Example directory.
+The two packages in this workspace are px4_msgs and offboard_uxrce. offboard_uxrce is a ROS2 package that contains the code for the offboard control node that we will implement. It lives inside the offboard_uxrce directory.
 
 Before we build these two packages, we need to source our ROS2 installation. Run this code to do that
 
@@ -132,7 +130,7 @@ As mentioned in Jaeyoung Lim's [example](https://github.com/Jaeyoung-Lim/px4-off
 
 After this runs, we should never need to build px4_msgs again. However, we will need to build px4_offboard every time we make changes to the code. To do this, and save time, we can run
 ```
-colcon build --packages-select px4_offboard
+colcon build --packages-select offboard_uxrce
 ```
 
 If you tried to run our code now, it would not work. This is because we need to source our current workspace. This is always done after a build. To do this, be sure you are in the src directory, and then run this code
@@ -143,6 +141,9 @@ source install/setup.bash
 
 We will run this every time we build. It will also need to be run in every terminal that we want to run ROS2 commands in.
 
+### Building Ego-Planner ROS2 
+The final setup for ROS2 Ego-Planner please follow [here](https://github.com/ZJU-FAST-Lab/ego-planner-swarm/tree/ros2_version) 
+
 
 ### Running the Code
 This example has been designed to run from one launch file that will start all the necessary nodes. The launch file will run a python script that uses gnome terminal to open a new terminal window for MicroDDS and Gazebo.
@@ -150,7 +151,7 @@ This example has been designed to run from one launch file that will start all t
 Run this code to start the example
 
 ```
-ros2 launch px4_offboard offboard_velocity_control.launch.py
+ros2 launch offboard_uxrce offboard_control.launch.py
 ```
 
 This will run numerous things. In no particular order, it will run:
@@ -159,12 +160,12 @@ This will run numerous things. In no particular order, it will run:
    * MicroDDS in a new terminal window
    * Gazebo will open in a second tab in the same terminal window
       * Gazebo GUI will open in it's own window
-* control.py in a new window
-   * Sends ROS2 Teleop commands to the /offboard_velocity_cmd topic based on keyboard input
+* Keyboard_control.py in a new window
+   * Sends ROS2 Teleop commands to the /offboard_position_cmd topic based on keyboard input
 * RVIZ will open in a new window
-* velocity_control.py runs as it's own node, and is the main node of this example
+* Offboard_control.py runs as it's own node, and is the main node of this example
 
-Once everything is running, you should be able to focus into the control.py terminal window, arm, and takeoff. The controls mimic Mode 2 RC Transmitter controls with WASD being the left joystick and the arrow keys being the right joystick. The controls are as follows:
+Once everything is running, you should be able to focus into the Keyboard_control.py terminal window, arm, and takeoff. The controls mimic Mode 2 RC Transmitter controls with WASD being the left joystick and the arrow keys being the right joystick. The controls are as follows:
 * W: Up
 * S: Down
 * A: Yaw Left
@@ -174,10 +175,11 @@ Once everything is running, you should be able to focus into the control.py term
 * Left Arrow: Roll Left
 * Right Arrow: Roll Right
 * Space: Arm/Disarm
+* M: Activation Ego-Planner Position
 
 Pressing *Space* will arm the drone. Wait a moment and it will takeoff and switch into offboard mode. You can now control it using the above keys. If you land the drone, it will disarm and to takeoff again you will need to toggle the arm switch off and back on with the space bar. 
 
-Using the controls, click *W* to send a vertical veloctiy command and take off. Once in the air you can control it as you see fit.
+Using the controls, click *W* to send a vertical position command and take off. Once in the air you can control it as you see fit.
 
 ## Closing Simulation *IMPORTANT*
 When closing the simulation, it is very tempting to just close the terminal windows. However, this will leave Gazebo running in the background, potentially causing issues when you run Gazebo in the future. To correctly end the Gazebo simulation, go to it's terminal window and click *Ctrl+C*. This will close Gazebo and all of it's child processes. Then, you can close the other terminal windows.
@@ -195,6 +197,10 @@ then QGroundControl would run in a new tab of the terminal window and the QGroun
 ## Known Issues
 If the vehicle does not arm when you press Enter, check to ensure the parameter NAV_DLL_ACT is set to 0. You may need to download QGroundControl and disable this parameter if you want to run this demo without needing QGC open.
 
-## Questions
-Join the ARK Electronics Discord [here](https://discord.gg/TDJzJxUMRX) for more help and to stay up to date on our projects.
 
+## Reference Projects
+1. [Offboard Velocity Control](https://github.com/ARK-Electronics/ROS2_PX4_Offboard_Example/tree/master)   
+The offboard controller module comes from this project, but this project give example for velocity control and a single drone control. Join the ARK Electronics Discord [here](https://discord.gg/TDJzJxUMRX) for more help and to stay up to date on offboard projects.
+
+2. [EGO-Planner-ROS2](https://github.com/ZJU-FAST-Lab/ego-planner-swarm/tree/ros2_version)   
+The planning part comes from this project, but the simulation environment of this project is not consistent with reality
