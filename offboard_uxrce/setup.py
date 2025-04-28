@@ -24,7 +24,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'offboard_control = offboard_uxrce.offboard_control:main',
             'visualizer = offboard_uxrce.visualizer:main',
             'Offboard_control = offboard_uxrce.Offboard_control:main',
             'Keyboard_control = offboard_uxrce.Keyboard_control:main',
